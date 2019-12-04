@@ -1,0 +1,6 @@
+Network Analyzer (C) 2019 | All Rights Reserved
+
+This tool was designed by the following individuals:
+Dakota Cookenmaster - Front-end Design and Data Integration
+A.J. Ruckman	    - Database system design
+Alejandro Sanchez   - Production Deployment and Testing
