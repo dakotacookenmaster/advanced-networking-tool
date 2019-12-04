@@ -1,0 +1,17 @@
+/* Custom CSS to override undesireable bootstrap behavior */
+#flowCharts, #generalStats {
+    padding: 50px;
+    background: white;
+    color: black;
+}
+footer {
+    padding: 20px;
+}
+td, th {
+    padding: 10px;
+}
+
+th {
+    text-align: center;
+    font-weight: bold;
+}

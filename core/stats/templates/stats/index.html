@@ -1,0 +1,109 @@
+{% load static %}
+<head>
+    <script src="{% static "/stats/JS/jquery.js" %}"></script>
+    <script src="{% static "/stats/JS/popper.min.js" %}"></script>
+    <script src="{% static "/stats/JS/bootstrap.js" %}"></script>
+    <script src="{% static "/stats/JS/bootstrap.bundle.js" %}"></script>
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="//www.amcharts.com/lib/4/themes/kelly.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "stats/css/bootstrap.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "stats/css/custom.css" %}" />
+    <title>Network Analyzer</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01"></div>
+    </nav>
+
+    <!-- Jumbotron -->
+    <div class="jumbotron">
+        <h1 class="display-3">Network Analyzer</h1>
+        <p class="lead">A simple statistics tool to display information about a preset server's network traffic. </p>
+    </div>
+
+    <main class="col-10 offset-1">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#generalStats">General Stats</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#flowCharts">IP Flows</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tabularData">Tabular Data</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active show" id="generalStats">
+                <h2 class="text-center">Requests by IP Address (Top 10)</h2>
+                <h4 class="text-center">Average Requests: {{ average }} | Average Transmission Time: {{ att }} Seconds </h4>
+                <div id="barChart"><!-- content here --></div>
+                <script>
+                    var totals = {{totals|safe}};
+                </script>
+                <script src="{% static "/stats/JS/barDiagram.js" %}"></script>
+            </div>
+            <div class="tab-pane fade text-center" id="flowCharts">
+                <h2>IP Flows (Top 10 Only)</h2>
+                <div id="flowChart"><!-- Will be filled with chord diagram --></div>
+                <div id="barChart"><!-- Will be filled with sankey diagram --></div>
+                <script>
+                    var flows = {{flows|safe}};
+                </script>
+                <script src="{% static "/stats/JS/chordDiagram.js" %}"></script>
+            </div>
+            <div class="tab-pane fade" id="tabularData">
+                <br />
+                <h2 class="text-center">Device and Network Logistics (Top 100)</h2>
+                <br />
+                <table class="table-striped">
+                    <tbody>
+                        <tr>
+                            <th>Transmission Time</th>
+                            <th>Source IPv4 Address</th>
+                            <th>Destination IPv4 Address</th>
+                            <th>Byte Count:</th>
+                            <th>Protocol Identifier</th>
+                            <th>Source Transport Port</th>
+                            <th>Destination Transport Port</th>
+                            <th>IP Version</th>
+                        </tr>
+
+                        {% load mathfilters %}
+                        {% for elem in tabularData %}
+                            <tr>
+                                <td>Transmission Time: {{ elem.flowendmilliseconds|sub:elem.flowstartmilliseconds }}</td>
+                                <td>Source IPv4 Address: {{ elem.sourceipv4address }}</td>
+                                <td>Destination IPv4 Address: {{ elem.destinationipv4address }}</td>
+                                <td>Byte Count: {{ elem.octetdeltacount }}</td>
+                                <td>Protocol Identifier: {{ elem.protocolidentifier }}</td>
+                                <td>Source Transport Port: {{ elem.sourcetransportport }}</td>
+                                <td>Destination Transport Port: {{ elem.destinationtransportport }}</td>
+                                {% comment %} <td>Ingress Interface: {{ elem.ingressinterface }}</td>
+                                <td>Egress Interface: {{ elem.egressinterface }}</td> {% endcomment %}
+                                <td>IP Version: {{ elem.ipversion }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <p>&copy; {{ year }} | All Rights Reserved</p>
+    <footer>
+    <script>
+        document.getElementById("generalCharts").addEventListener("click", function() {
+            window.location.reload();
+        }); 
+    </script>
+</body>
