@@ -6,7 +6,7 @@ import numpy as np
 
 def getFlows():
     flow = []
-    query = FlowsFIpv4Totals.objects.all()[:10] # limit to 10
+    query = FlowsFIpv4Totals.objects.all()[120:450] # limit to 100
     for elem in query:
         flow.append([
             elem.sourceipv4address,
